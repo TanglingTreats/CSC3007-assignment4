@@ -70,6 +70,21 @@ output.innerHTML = slider.value; // Display the default slider value
     obj.target = clean_links_data[i].target;
     links.push(obj);
   }
+  svg
+    .append("defs")
+    .append("marker")
+    .attr("id", "arrowhead")
+    .attr("viewBox", "-0 -5 10 10")
+    .attr("refX", 21)
+    .attr("refY", 0)
+    .attr("markerWidth", 13)
+    .attr("markerHeight", 13)
+    .attr("orient", "auto")
+    //.attr("x-overflox", "visible")
+    .append("svg:path")
+    .attr("d", "M 0,-5 L 10 ,0 L 0,5")
+    .attr("fill", "black")
+    .style("stroke", "none");
 
   let linkpath = svg
     .append("g")
@@ -80,7 +95,8 @@ output.innerHTML = slider.value; // Display the default slider value
     .append("path")
     .attr("class", "link")
     .attr("fill", "none")
-    .attr("stroke", "black");
+    .attr("stroke", "black")
+    .attr("marker-end", "url(#arrowhead)");
 
   let node = svg
     .append("g")
@@ -107,7 +123,7 @@ output.innerHTML = slider.value; // Display the default slider value
         .style("visibility", "visible")
         .style("position", "absolute")
         .style("top", event.pageY - 100)
-        .style("left", event.pageX + 50);
+        .style("left", event.pageX + 30);
       d3.select(event.target).attr("class", "cases").classed("select", true);
     })
     .on("mouseout", (event, d) => {
