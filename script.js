@@ -96,7 +96,8 @@ output.innerHTML = slider.value; // Display the default slider value
     .attr("class", "link")
     .attr("fill", "none")
     .attr("stroke", "black")
-    .attr("marker-end", "url(#arrowhead)");
+    .attr("marker-end", "url(#arrowhead)")
+    .style("stroke-dasharray", "5,5");
 
   let node = svg
     .append("g")
@@ -155,7 +156,7 @@ output.innerHTML = slider.value; // Display the default slider value
       d3
         .forceLink(links)
         .id((d) => d.id)
-        .distance(6)
+        .distance(10)
         .strength(0.8)
     )
     .on("tick", (d) => {
