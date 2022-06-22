@@ -49,7 +49,6 @@ output.innerHTML = slider.value; // Display the default slider value
     };
   });
 
-  console.log(cases_data);
   console.log(clean_cases_data);
   console.log(clean_links_data);
 
@@ -65,7 +64,7 @@ output.innerHTML = slider.value; // Display the default slider value
 
   let links = [];
   const numOfLinks = clean_links_data.length;
-  for (let i = 0; i < numOfLinks / 2; i++) {
+  for (let i = 0; i < numOfLinks; i++) {
     let obj = {};
     obj.source = clean_links_data[i].source;
     obj.target = clean_links_data[i].target;
@@ -117,7 +116,7 @@ output.innerHTML = slider.value; // Display the default slider value
         .y(height / 2)
     )
     .force("charge", d3.forceManyBody().strength(0))
-    .force("collide", d3.forceCollide().strength(0.1).radius(15))
+    .force("collide", d3.forceCollide().strength(0.5).radius(30))
     .force(
       "link",
       d3
@@ -163,20 +162,7 @@ output.innerHTML = slider.value; // Display the default slider value
   slider.oninput = function () {
     output.innerHTML = this.value;
     simulation
-      .force(
-        "x",
-        d3
-          .forceX()
-          .strength(0.5)
-          .x((d) => xPosition(d.class) * this.value + width / (classNumber - 1))
-      )
-      .force(
-        "y",
-        d3
-          .forceY()
-          .strength(0.2)
-          .y(height / 2)
-      )
+      .force("collide", d3.forceCollide().strength(0.5).radius(this.value))
       .alphaTarget(0.3)
       .restart();
   };
