@@ -78,6 +78,7 @@ output.innerHTML = slider.value; // Display the default slider value
     .data(links)
     .enter()
     .append("path")
+    .attr("class", "link")
     .attr("fill", "none")
     .attr("stroke", "black");
 
@@ -88,7 +89,7 @@ output.innerHTML = slider.value; // Display the default slider value
     .data(data)
     .enter()
     .append("circle")
-    .attr("r", 10)
+    .attr("r", 15)
     .style("fill", (d) => genderColorScale(d.class))
     .call(
       d3
@@ -96,7 +97,23 @@ output.innerHTML = slider.value; // Display the default slider value
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended)
-    );
+    )
+    .on("mouseover", (event, d) => {
+      console.log("Mouseover");
+      d3.select(".tooltip")
+        .html(
+          `Age: ${d.age}<br/>Occupation:  ${d.occupation}<br/>Vaccinated: ${d.vaccinated}`
+        )
+        .style("visibility", "visible")
+        .style("position", "absolute")
+        .style("top", event.pageY - 100)
+        .style("left", event.pageX + 50);
+      d3.select(event.target).attr("class", "cases").classed("select", true);
+    })
+    .on("mouseout", (event, d) => {
+      d3.select(".tooltip").style("visibility", "hidden");
+      d3.select(event.target).attr("class", "cases").classed("select", false);
+    });
 
   let simulation = d3
     .forceSimulation()
@@ -105,25 +122,25 @@ output.innerHTML = slider.value; // Display the default slider value
       "x",
       d3
         .forceX()
-        .strength(0.5)
+        .strength(0.2)
         .x(width / 2)
     )
     .force(
       "y",
       d3
         .forceY()
-        .strength(0.3)
+        .strength(0.2)
         .y(height / 2)
     )
-    .force("charge", d3.forceManyBody().strength(0))
-    .force("collide", d3.forceCollide().strength(0.5).radius(30))
+    .force("charge", d3.forceManyBody().strength(0.5))
+    .force("collide", d3.forceCollide().strength(1.2).radius(35))
     .force(
       "link",
       d3
         .forceLink(links)
         .id((d) => d.id)
-        .distance(60)
-        .strength(0.5)
+        .distance(6)
+        .strength(0.8)
     )
     .on("tick", (d) => {
       node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
