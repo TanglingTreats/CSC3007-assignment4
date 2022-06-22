@@ -116,7 +116,6 @@ output.innerHTML = slider.value; // Display the default slider value
         .on("end", dragended)
     )
     .on("mouseover", (event, d) => {
-      console.log("Mouseover");
       d3.select(".tooltip")
         .html(
           `Age: ${d.age}<br/>Occupation:  ${d.occupation}<br/>Vaccinated: ${d.vaccinated}`
@@ -156,8 +155,8 @@ output.innerHTML = slider.value; // Display the default slider value
       d3
         .forceLink(links)
         .id((d) => d.id)
-        .distance(10)
-        .strength(0.8)
+        .distance(20)
+        .strength(1)
     )
     .on("tick", (d) => {
       node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
@@ -196,8 +195,8 @@ output.innerHTML = slider.value; // Display the default slider value
   slider.oninput = function () {
     output.innerHTML = this.value;
     simulation
-      .force("collide", d3.forceCollide().strength(0.5).radius(this.value))
-      .alphaTarget(0.3)
+      .force("collide", d3.forceCollide().strength(1.2).radius(this.value))
+      .alphaTarget(0.1)
       .restart();
   };
 })();
