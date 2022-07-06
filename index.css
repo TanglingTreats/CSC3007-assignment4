@@ -6,25 +6,25 @@ body {
     height: 100%;
 }
 
-#tooltip {
-    z-index: 10;
+.tooltip {
     padding: 10px;
     background-color: white;
     border-radius: 10px;
     border: 1px solid black;
+    text-transform: capitalize;
 }
 
 #checkboxes {
     width: 30%;
 }
 
-.selection {
-    padding: 10px;
+.cases.select {
+    stroke: blue;
+    stroke-width: 5px;
 }
 
-.selected {
-    border-radius: 5px;
-    background-color: #D6D6D6;
+.links.select {
+    stroke: blue;
 }
 
 .scalable-svg {

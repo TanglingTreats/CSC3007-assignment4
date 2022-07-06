@@ -70,6 +70,21 @@ output.innerHTML = slider.value; // Display the default slider value
     obj.target = clean_links_data[i].target;
     links.push(obj);
   }
+  svg
+    .append("defs")
+    .append("marker")
+    .attr("id", "arrowhead")
+    .attr("viewBox", "-0 -5 10 10")
+    .attr("refX", 21)
+    .attr("refY", 0)
+    .attr("markerWidth", 13)
+    .attr("markerHeight", 13)
+    .attr("orient", "auto")
+    //.attr("x-overflox", "visible")
+    .append("svg:path")
+    .attr("d", "M 0,-5 L 10 ,0 L 0,5")
+    .attr("fill", "black")
+    .style("stroke", "none");
 
   let linkpath = svg
     .append("g")
@@ -78,8 +93,11 @@ output.innerHTML = slider.value; // Display the default slider value
     .data(links)
     .enter()
     .append("path")
+    .attr("class", "link")
     .attr("fill", "none")
-    .attr("stroke", "black");
+    .attr("stroke", "black")
+    .attr("marker-end", "url(#arrowhead)")
+    .style("stroke-dasharray", "5,5");
 
   let node = svg
     .append("g")
@@ -88,7 +106,7 @@ output.innerHTML = slider.value; // Display the default slider value
     .data(data)
     .enter()
     .append("circle")
-    .attr("r", 10)
+    .attr("r", 15)
     .style("fill", (d) => genderColorScale(d.class))
     .call(
       d3
@@ -96,7 +114,31 @@ output.innerHTML = slider.value; // Display the default slider value
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended)
-    );
+    )
+    .on("mouseover", (event, d) => {
+      d3.select(".tooltip")
+        .html(
+          `Age: ${d.age}<br/>Occupation:  ${d.occupation}<br/>Vaccinated: ${d.vaccinated}`
+        )
+        .style("visibility", "visible")
+        .style("position", "absolute")
+        .style("top", event.pageY - 100)
+        .style("left", event.pageX + 30);
+      d3.select(event.target).attr("class", "cases").classed("select", true);
+      d3.selectAll(".link")
+        .filter((link) => link.source === d || link.target === d)
+        .attr("class", "links")
+        .classed("select", true);
+    })
+    .on("mouseout", (event, d) => {
+      d3.select(".tooltip").style("visibility", "hidden");
+      d3.select(event.target).attr("class", "cases").classed("select", false);
+      console.log(d);
+      d3.selectAll(".link")
+        .filter((link) => link.source === d || link.target === d)
+        .attr("class", "links")
+        .classed("select", false);
+    });
 
   let simulation = d3
     .forceSimulation()
@@ -105,25 +147,25 @@ output.innerHTML = slider.value; // Display the default slider value
       "x",
       d3
         .forceX()
-        .strength(0.5)
+        .strength(0.2)
         .x(width / 2)
     )
     .force(
       "y",
       d3
         .forceY()
-        .strength(0.3)
+        .strength(0.2)
         .y(height / 2)
     )
-    .force("charge", d3.forceManyBody().strength(0))
-    .force("collide", d3.forceCollide().strength(0.5).radius(30))
+    .force("charge", d3.forceManyBody().strength(0.5))
+    .force("collide", d3.forceCollide().strength(1.2).radius(35))
     .force(
       "link",
       d3
         .forceLink(links)
         .id((d) => d.id)
-        .distance(60)
-        .strength(0.5)
+        .distance(20)
+        .strength(1)
     )
     .on("tick", (d) => {
       node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
@@ -162,8 +204,8 @@ output.innerHTML = slider.value; // Display the default slider value
   slider.oninput = function () {
     output.innerHTML = this.value;
     simulation
-      .force("collide", d3.forceCollide().strength(0.5).radius(this.value))
-      .alphaTarget(0.3)
+      .force("collide", d3.forceCollide().strength(1.2).radius(this.value))
+      .alphaTarget(0.1)
       .restart();
   };
 })();
