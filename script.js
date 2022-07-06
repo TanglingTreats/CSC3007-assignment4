@@ -125,10 +125,19 @@ output.innerHTML = slider.value; // Display the default slider value
         .style("top", event.pageY - 100)
         .style("left", event.pageX + 30);
       d3.select(event.target).attr("class", "cases").classed("select", true);
+      d3.selectAll(".link")
+        .filter((link) => link.source === d || link.target === d)
+        .attr("class", "links")
+        .classed("select", true);
     })
     .on("mouseout", (event, d) => {
       d3.select(".tooltip").style("visibility", "hidden");
       d3.select(event.target).attr("class", "cases").classed("select", false);
+      console.log(d);
+      d3.selectAll(".link")
+        .filter((link) => link.source === d || link.target === d)
+        .attr("class", "links")
+        .classed("select", false);
     });
 
   let simulation = d3

@@ -23,6 +23,10 @@ body {
     stroke-width: 5px;
 }
 
+.links.select {
+    stroke: blue;
+}
+
 .scalable-svg {
     width: 800px;
     height: 600px;
